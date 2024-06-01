@@ -1,0 +1,10 @@
+Schemas con ZOD:
+Los schemas son de la libreria zod y sirven para poder validar los datos que se ingresan desde el front end.
+Porque nosotros cuando codeamos el backend es para un escenario en el que el usuario ingresa bien todos los datos,
+y todo sucede normalmente bien. Pero con zod, generamos esquemas para los ingresos de datos mediante los cuales validamos
+que cumplan con los requerimientos de nuestras rutas del backend.
+Estos esquemas los podemos instanciar en cada ruta, en el momento en que el backend los obtiene del front end, o bien, generar un middelware para aplicarlo en las rutas que sean necesarias. 
+Los schemas que generamos con zod tienen atributos de la libreria, uno de ellos es .parse que al ejecutarlo validara los datos que ingresan 
+al schema. Entonces en nuestro middelware, le pasamos el schema ya preparado como parametro, y ejecutamos .parse para que valide.
+El middelware schemaValidator.js que usaremos luego en las rutas que necesiten validar los datos, sera esta funcion que alverga los schemas, y ejecutara su validacion por .parse
+si se ejecuta bien .parse sigue con next, sino te tumbara el sistema, es por eso que usamos trycatch para mostrar mejor el error por sistema antes. 
