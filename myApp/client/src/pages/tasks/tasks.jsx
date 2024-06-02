@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function RegisterPage() {
+export default function Tasks() {
   return (
     <div>
-      register page
+      
     </div>
   )
 }

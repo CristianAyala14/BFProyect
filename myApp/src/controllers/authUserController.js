@@ -6,6 +6,12 @@ class authUserController{
 
     static register = async(req,res)=>{
       const {username, email, password} = req.body
+      
+      const founded = await authUserDao.getBy(email)
+
+      if(founded){
+        return res.status(400).json({message: "The email is already registered."})
+      }
       try {
         const passwordHash = await bcrypt.hash(password, 10) 
         const newUser  = {
@@ -14,17 +20,22 @@ class authUserController{
           password: passwordHash
         }
         let userCreated = await authUserDao.create(newUser)
-        const auth_token = generateToken(newUser)
-        res.cookie("authCookie", auth_token, { httpOnly: true, maxAge: 360000 })
-        res.json({
+        const response = {
           id: userCreated._id,
           username: userCreated.username,
-          email: userCreated.email
+          email: userCreated.email,
+        }
+
+        const auth_token = generateToken(newUser)
+        res.cookie("authCookie", auth_token, { httpOnly: true, maxAge: 360000 })
+        res.status(200).json({
+          message: "User registered successfully.",
+          payload: response
         })
       
       
       } catch (error) {
-        res.status(500).json({message: error.message})
+        return res.status(500).json({message: error.message})
       }
 
     }
@@ -34,7 +45,7 @@ class authUserController{
       try {
         const foundedUser = await authUserDao.getBy(email)
         if(!foundedUser){
-          return res.status(400).json({message: "User not founded."})
+          return res.status(400).json({message:"User not founded."})
         }
         //it compares if it's the same as saved. response boolean.
         const isMatch = await bcrypt.compare(password, foundedUser.password)
@@ -49,14 +60,13 @@ class authUserController{
         }
         const auth_token = generateToken(user)
         res.cookie("authCookie", auth_token, { httpOnly: true, maxAge: 360000 })
-        res.json({
-          id: foundedUser._id,
-          username: foundedUser.username,
-          email: foundedUser.email
+        res.status(200).json({
+          message: "User logged successfully.",
+          payload: user
         })
         
       }catch (error) {
-          res.status(500).json({message: error.message})
+        return  res.status(500).json({message: error.message})
       }
     }
 
@@ -75,12 +85,11 @@ class authUserController{
           email: userFound.email
         })
       } catch (error) {
-        res.status(500).json({message: error.message})
+        return res.status(500).json({message: error.message})
       }
       
     }
 }
 
 
- 
 export {authUserController};
