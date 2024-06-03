@@ -7,7 +7,7 @@ import { authUserRouter } from "./routes/authUserRoute.js";
 import { taskRouter } from "./routes/taskRoute.js";
 const app = express()
 app.use(express.urlencoded({extended: true}));
-app.use(cors({origin:"http://localhost:5173"}))
+app.use(cors({origin:"http://localhost:5173", credentials: true}))
 app.use(morgan("dev"))
 app.use(express.json())
 app.use(cookieParser())

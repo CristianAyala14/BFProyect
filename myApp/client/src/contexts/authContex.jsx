@@ -1,16 +1,9 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { registerRequest, loginRequest } from "../api/authUser";
-
+import Cookies from "js-cookie";
 
 export const authContext = createContext();
 
-export const useAuthContext = ()=>{
-    const context = useContext(authContext)
-    if(!context){
-        throw new Error("useAuthContext must be used within an AuthProvider")
-    }
-    return context;
-}
 
 export const AuthProvider = ({children})=>{
 
@@ -25,7 +18,7 @@ export const AuthProvider = ({children})=>{
             setIsAuthenticated(true);
         } catch (error) {
             if(Array.isArray(error.response.data)){
-                return setRegisterErrors(error.response.data.message)
+                return setRegisterErrors(error.response.data)
             }
             setRegisterErrors([error.response.data.message])
 
@@ -38,8 +31,11 @@ export const AuthProvider = ({children})=>{
             setUser(res.payload)
             setIsAuthenticated(true);
         } catch (error) {
-            setRegisterErrors(error.response.data)
-            console.error('Could not connect to the server:', error.response.data);
+            if(Array.isArray(error.response.data)){
+                return setRegisterErrors(error.response.data)
+            }
+            setRegisterErrors([error.response.data.message])
+            
         }
     }
 
@@ -53,6 +49,14 @@ export const AuthProvider = ({children})=>{
       },[registerErrors])
 
 
+
+    useEffect(()=>{
+        const cookies = Cookies.get()    
+        console.log(cookies)
+        if(cookies.authCookie)
+    },[])            
+
+
     return (
         <authContext.Provider value={{singUp, singIn, user, isAuthenticated, registerErrors}}>
             {children}
@@ -60,3 +64,10 @@ export const AuthProvider = ({children})=>{
     )
 }
 
+export const useAuthContext = ()=>{
+    const context = useContext(authContext)
+    if(!context){
+        throw new Error("useAuthContext must be used within an AuthProvider")
+    }
+    return context;
+}
