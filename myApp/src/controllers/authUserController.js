@@ -1,6 +1,7 @@
 import { authUserDao } from "../DAO/index.js"
 import bcrypt from "bcryptjs";
-import { generateToken } from "../libs/generateToken.js";
+import { generateToken , verifyToken} from "../libs/generateToken.js";
+
 
 class authUserController{
 
@@ -27,7 +28,7 @@ class authUserController{
         }
 
         const auth_token = generateToken(newUser)
-        res.cookie("authCookie", auth_token, { httpOnly: true, maxAge: 360000 })
+        res.cookie("authCookie", auth_token)
         res.status(200).json({
           message: "User registered successfully.",
           payload: response
@@ -59,7 +60,7 @@ class authUserController{
           email: foundedUser.email,
         }
         const auth_token = generateToken(user)
-        res.cookie("authCookie", auth_token, { httpOnly: true, maxAge: 360000 })
+        res.cookie("authCookie", auth_token)
         res.status(200).json({
           message: "User logged successfully.",
           payload: user
@@ -89,7 +90,22 @@ class authUserController{
       }
       
     }
+
+    static veryfyToken = async(req,res)=>{
+      const {authCookie} = req.cookies
+
+      try {
+        if(!authCookie) return res.status(401).json({message: "Unauthorized."})
+        const userVerified = verifyToken(authCookie)
+        const userFounded = await authUserDao.getBy(userVerified.email)
+        if(!userFounded) return res.status(401).json({message: "User could not be authorized."})
+        return res.status(200).json({message: "User authorized."})
+      } catch (error) {
+        return res.status(500).json({message: error.message})
+      }
+    }
 }
 
 
 export {authUserController};
+

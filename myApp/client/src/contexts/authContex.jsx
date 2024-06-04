@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { registerRequest, loginRequest } from "../api/authUser";
+import { registerRequest, loginRequest , veryfyTokenRequest} from "../api/authUser";
 import Cookies from "js-cookie";
 
 export const authContext = createContext();
@@ -48,13 +48,16 @@ export const AuthProvider = ({children})=>{
         }
       },[registerErrors])
 
+    
 
+      
 
     useEffect(()=>{
-        const cookies = Cookies.get()    
-        console.log(cookies)
-        if(cookies.authCookie)
-    },[])            
+        const cookies = Cookies.get()
+        const response = veryfyTokenRequest()
+        console.log(response)
+    },[])
+    
 
 
     return (
