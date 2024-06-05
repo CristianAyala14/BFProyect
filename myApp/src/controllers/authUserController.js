@@ -99,7 +99,11 @@ class authUserController{
         const userVerified = verifyToken(authCookie)
         const userFounded = await authUserDao.getBy(userVerified.email)
         if(!userFounded) return res.status(401).json({message: "User could not be authorized."})
-        return res.status(200).json({message: "User authorized."})
+        const sendUser={
+          username: userFounded.username,
+          email: userFounded.email,
+        }
+          return res.status(200).json({message: "User authorized.", user: sendUser})
       } catch (error) {
         return res.status(500).json({message: error.message})
       }

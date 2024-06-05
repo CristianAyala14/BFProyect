@@ -30,6 +30,8 @@ export const AuthProvider = ({children})=>{
             const res = await loginRequest(user);
             setUser(res.payload)
             setIsAuthenticated(true);
+            console.log(user)
+            console.log(isAuthenticated)
         } catch (error) {
             if(Array.isArray(error.response.data)){
                 return setRegisterErrors(error.response.data)
@@ -48,16 +50,35 @@ export const AuthProvider = ({children})=>{
         }
       },[registerErrors])
 
-    
+
+
+      useEffect(()=>{
+        async function verifyToken(){
+            const cookies = Cookies.get()
+            if(!cookies.authCookie){
+                setIsAuthenticated(false);
+                return setUser(null);
+            }
+            try {
+                const res = await veryfyTokenRequest() 
+                if(!res.user){
+                    setIsAuthenticated(false);
+                    return setUser(null);
+                }
+                setIsAuthenticated(true);
+                setUser(res.user)
+            } catch (error) {
+                setIsAuthenticated(false);
+                setUser(null)
+            }
+        }
+        verifyToken(); 
+        console.log(isAuthenticated) 
+      },[])
 
       
 
-    useEffect(()=>{
-        const cookies = Cookies.get()
-        const response = veryfyTokenRequest()
-        console.log(response)
-    },[])
-    
+   
 
 
     return (

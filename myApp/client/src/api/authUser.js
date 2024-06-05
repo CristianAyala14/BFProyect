@@ -21,7 +21,7 @@ export async function loginRequest(user) {
 export async function veryfyTokenRequest(token){
   try {
     const serverResponse = await axiosInstance.get(`/authuser/veryfytoken`);
-    const response = serverResponse.data.message;
+    const response = serverResponse.data;
     return response; //this response is directly from the server within it's success or not.
   } catch (error) {
     throw error;  //this error ill alert when connection with server fail.
