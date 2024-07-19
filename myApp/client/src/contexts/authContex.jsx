@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 export const authContext = createContext();
 
 
+
 export const AuthProvider = ({children})=>{
 
     const [user, setUser] = useState(null)
@@ -30,8 +31,6 @@ export const AuthProvider = ({children})=>{
             const res = await loginRequest(user);
             setUser(res.payload)
             setIsAuthenticated(true);
-            console.log(user)
-            console.log(isAuthenticated)
         } catch (error) {
             if(Array.isArray(error.response.data)){
                 return setRegisterErrors(error.response.data)
@@ -65,8 +64,6 @@ export const AuthProvider = ({children})=>{
                     setIsAuthenticated(false);
                     return setUser(null);
                 }
-                console.log(res.user)
-
                 setIsAuthenticated(true);
                 setUser(res.user)
             } catch (error) {
@@ -75,7 +72,6 @@ export const AuthProvider = ({children})=>{
             }
         }
         verifyToken(); 
-        console.log(isAuthenticated) 
       },[])
 
       

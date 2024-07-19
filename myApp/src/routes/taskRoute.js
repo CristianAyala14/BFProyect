@@ -6,11 +6,11 @@ import { createTaskSchema } from "../validateSchemas/taskSchema.js";
 
 const router = Router()
 
-router.get("/", validateToken, taskController.getTasks )
-router.get("/:id", validateToken, taskController.getTask )
-router.post("/", validateToken, schemaValidator(createTaskSchema), taskController.createTask )
-router.put("/:id", validateToken, taskController.updateTask )
-router.delete("/:id", validateToken, taskController.deleteTask )
+router.get("/getTasks", validateToken, taskController.getTasks )
+router.get("/getTask/:id", validateToken, taskController.getTask )
+router.post("/createTask", validateToken, schemaValidator(createTaskSchema), taskController.createTask )
+router.put("/updateTask/:id", validateToken, taskController.updateTask )
+router.delete("/deleteTask/:id", validateToken, taskController.deleteTask )
 
 
 
