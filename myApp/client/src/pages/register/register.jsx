@@ -12,7 +12,7 @@ export default function Register() {
   
   useEffect(()=>{
     if(isAuthenticated){
-      navigate("/tasks")
+      navigate("/alltasks")
     }
   },[isAuthenticated])
 

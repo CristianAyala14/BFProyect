@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { registerRequest, loginRequest , veryfyTokenRequest} from "../api/authUser";
+import { registerRequest, loginRequest , verifyTokenRequest} from "../api/authUser";
 import Cookies from "js-cookie";
 
 export const authContext = createContext();
@@ -11,6 +11,8 @@ export const AuthProvider = ({children})=>{
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [registerErrors, setRegisterErrors] = useState([])
+    const [loading, setLoading] = useState(true)
+
 
     const singUp = async (user) =>{
         try {
@@ -56,19 +58,25 @@ export const AuthProvider = ({children})=>{
             const cookies = Cookies.get()
             if(!cookies.authCookie){
                 setIsAuthenticated(false);
+                setLoading(false);
                 return setUser(null);
             }
             try {
-                const res = await veryfyTokenRequest() 
+                const res = await verifyTokenRequest() 
                 if(!res.user){
                     setIsAuthenticated(false);
-                    return setUser(null);
+                    setLoading(false);
+                    return;
                 }
                 setIsAuthenticated(true);
-                setUser(res.user)
+                setUser(res.user);
+                setLoading(false);
+
             } catch (error) {
                 setIsAuthenticated(false);
-                setUser(null)
+                setUser(null);
+                setLoading(false);
+
             }
         }
         verifyToken(); 
@@ -80,7 +88,7 @@ export const AuthProvider = ({children})=>{
 
 
     return (
-        <authContext.Provider value={{singUp, singIn, user, isAuthenticated, registerErrors}}>
+        <authContext.Provider value={{singUp, singIn, user, isAuthenticated, loading, registerErrors}}>
             {children}
         </authContext.Provider>
     )

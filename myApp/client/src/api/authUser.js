@@ -18,7 +18,7 @@ export async function loginRequest(user) {
   }
 }
 
-export async function veryfyTokenRequest(token){
+export async function verifyTokenRequest(){
   try {
     const serverResponse = await axiosInstance.get(`/authuser/veryfytoken`);
     const response = serverResponse.data;

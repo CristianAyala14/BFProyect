@@ -9,5 +9,5 @@ router.post("/register", schemaValidator(registerSchema),authUserController.regi
 router.post("/login", schemaValidator(loginSchema),authUserController.login)
 router.post("/logout", authUserController.logout)
 router.get("/profile", validateToken ,authUserController.profile)
-router.get("/veryfytoken",authUserController.veryfyToken)
+router.get("/veryfytoken",authUserController.verifyToken)
 export {router as authUserRouter};

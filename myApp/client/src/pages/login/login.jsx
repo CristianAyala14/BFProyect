@@ -11,7 +11,7 @@ export default function Login() {
 
   useEffect(()=>{
     if(isAuthenticated){
-      navigate("/tasks")
+      navigate("/alltasks")
     }
   },[isAuthenticated])
 

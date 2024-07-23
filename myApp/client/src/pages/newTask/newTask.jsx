@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useTasksContext } from '../../contexts/tasksContext';
 
 
-export default function Tasks() {
+export default function NewTask() {
   const {user} = useAuthContext()
   const {register, handleSubmit} = useForm();
   const {createTask} = useTasksContext()

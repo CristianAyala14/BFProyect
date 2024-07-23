@@ -91,7 +91,7 @@ class authUserController{
       
     }
 
-    static veryfyToken = async(req,res)=>{
+    static verifyToken = async(req,res)=>{
       const {authCookie} = req.cookies
 
       try {
