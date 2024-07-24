@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const collection = "task"
 const taskSchema = new mongoose.Schema({
-    tittle:{
+    title:{
       type: String,
       required: true
     },

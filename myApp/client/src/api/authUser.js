@@ -20,10 +20,11 @@ export async function loginRequest(user) {
 
 export async function verifyTokenRequest(){
   try {
-    const serverResponse = await axiosInstance.get(`/authuser/veryfytoken`);
+    const serverResponse = await axiosInstance.get(`/authuser/verifytoken`);
     const response = serverResponse.data;
     return response; //this response is directly from the server within it's success or not.
   } catch (error) {
     throw error;  //this error ill alert when connection with server fail.
   }
 }
+

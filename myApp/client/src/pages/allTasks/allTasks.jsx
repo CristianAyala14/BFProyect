@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useTasksContext } from '../../contexts/tasksContext';
-import { useForm } from 'react-hook-form'
+import TaskCard from '../../components/taskCard';
 
 export default function AllTasks() {
 
@@ -10,14 +10,14 @@ export default function AllTasks() {
     getTasks();
   },[])
 
+  if(tasks.length ===0) return (<h1>...</h1>)
+
   return (
-    <div>
+    <div className='grid grid-cols-3 gap-2'>
       {
-        tasks.map((el)=>(
-          <div key={el._id}>
-            <h1>{el.tittle}</h1>
-            <p>{el.description}</p>
-          </div>
+        
+        tasks.map((task)=>(
+          <TaskCard task={task} key={task._id}/>
         ))
       }
     </div>

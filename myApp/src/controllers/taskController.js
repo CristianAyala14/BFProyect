@@ -23,7 +23,6 @@ class taskController{
         try {
             const taskId = req.params.id;
             const task = await taskDao.getBy(taskId)
-            console.log(task)
 
             if(!task) return res.status(404).json({message: "Task not founded."})
             return res.send({
@@ -38,12 +37,11 @@ class taskController{
 
     static createTask = async(req,res)=>{
         try {
-            const {tittle, description, date} = req.body;
+            const {title, description} = req.body;
             const userId = req.user.id;
             const newTask = {
-                tittle: tittle,
+                title: title,
                 description: description,
-                date: date,
                 user: userId
             } 
 
@@ -63,9 +61,9 @@ class taskController{
     static updateTask = async(req,res)=>{
         try {
             const taskId = req.params.id;
-            const {tittle, description, date} = req.body;
+            const {title, description, date} = req.body;
             const updatedTask = {
-                tittle: tittle,
+                title: title,
                 description: description,
                 date: date
             }

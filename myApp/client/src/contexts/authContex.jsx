@@ -41,6 +41,18 @@ export const AuthProvider = ({children})=>{
             
         }
     }
+    
+    const logOut = async (user) =>{
+        try {
+            Cookies.remove("authCookie");
+            setIsAuthenticated(false);
+            setUser(null);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
 
     useEffect(()=>{
         if(registerErrors.length>0){
@@ -88,7 +100,7 @@ export const AuthProvider = ({children})=>{
 
 
     return (
-        <authContext.Provider value={{singUp, singIn, user, isAuthenticated, loading, registerErrors}}>
+        <authContext.Provider value={{singUp, singIn, user, isAuthenticated, loading, logOut, registerErrors}}>
             {children}
         </authContext.Provider>
     )
