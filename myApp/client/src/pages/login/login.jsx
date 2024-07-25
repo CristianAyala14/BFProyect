@@ -35,7 +35,7 @@ export default function Login() {
           <input type="password" {...register("password", {required: true})}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' placeholder='password'/>
           {errors.password && <p className='text-red-500'>Password is required.</p>}
-          <button type='submit'>Log In</button>
+          <button className='bg-sky-500 text-white px-4 rounded-md my-2' type='submit'>Log In</button>
           <p className='flex gap-x-2 justify-between'>Don't have an account?.<Link to="/register" className="text-sky-500">Sing up</Link></p>
         </form>
       </div>

@@ -3,7 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form'
 import { useTasksContext } from '../../contexts/tasksContext';
 import { useEffect } from 'react';
-
+//dayjs
+import dayjs from "dayjs"
+import utc from "dayjs/plugin/utc"
+dayjs.extend(utc)
 export default function EditTask() {
 
   const navigate = useNavigate()
@@ -13,7 +16,7 @@ export default function EditTask() {
 
 
   const onSubmit = handleSubmit((updatedtask)=>{
-    const res = updateTask(params.id, updatedtask)
+    const res = updateTask(params.id, {...updatedtask, date: dayjs.utc(updatedtask.date).format()})
     navigate("/alltasks") ;
   })
 
@@ -22,9 +25,19 @@ export default function EditTask() {
     async function loadTask(){
       if(params.id){
         const TaskToEdit = await getTask(params.id) 
-        setValue("title", TaskToEdit.title);
-        setValue("description", TaskToEdit.description)
+
+        const newTaskToEdit = {
+          ...TaskToEdit, date: dayjs.utc(TaskToEdit.date).format("YYYY-MM-DD") //FORMATO INVVERTIDO SI ME LO TOMA
+        }
+
+        setValue("title", newTaskToEdit.title);
+        setValue("description", newTaskToEdit.description);
+        console.log(newTaskToEdit.date)
+
+        setValue("date", newTaskToEdit.date );
+
       }
+
     }
 
 
@@ -36,12 +49,13 @@ export default function EditTask() {
       <h1>Edit Task: </h1>
 
       <form onSubmit={onSubmit}>
-        
+        <label htmlFor="title">Title:</label>
         <input type="text" placeholder='title' {...register("title")} className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' autoFocus/>
-        
+        <label htmlFor="description">Description:</label>
         <textarea rows="3" placeholder="description" {...register("description")} className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' ></textarea>
-        
-        <button>Save</button>
+        <label htmlFor="date">Date:</label>
+        <input type="date"  placeholder="date"{...register("date")}  className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2'/>
+        <button className='bg-indigo-500 px-3 py-2'>Save</button>
       </form>
 
 

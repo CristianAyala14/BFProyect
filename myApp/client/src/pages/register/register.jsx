@@ -40,7 +40,7 @@ export default function Register() {
           <input type="password" {...register("password", {required: true})}
           className='w-full bg-zinc-700 text-white px-4 py-2 rounded-md my-2' placeholder='password'/>
           {errors.password && <p className='text-red-500'>Password is required.</p>}
-          <button type='submit'>Register</button>
+          <button className='bg-sky-500 text-white px-4 rounded-md my-2' type='submit'>Register</button>
           <p className='flex gap-x-2 justify-between'>Already have an account?.<Link to="/login" className="text-sky-500">Sing in</Link></p>
         </form>
       </div>

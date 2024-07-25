@@ -37,10 +37,11 @@ class taskController{
 
     static createTask = async(req,res)=>{
         try {
-            const {title, description} = req.body;
+            const {title, description, date} = req.body;
             const userId = req.user.id;
             const newTask = {
                 title: title,
+                date: date,
                 description: description,
                 user: userId
             } 
