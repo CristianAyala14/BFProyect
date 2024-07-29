@@ -22,9 +22,9 @@ export default function Login() {
   return (
     <div className='flex flex-col h-[calc(100vh-100px)] items-center justify-center '>
       {
-        registerErrors.map((error, i)=>(
-          <div className='bg-red-500 p-2 text-white rounded-md' key={i}>{error}</div>
-        ))
+        registerErrors &&
+          <div className='bg-red-500 p-2 text-white rounded-md'>{registerErrors}</div>
+        
       }
       <div className='bg-zinc-800 max-w-md w-full p-10 rounded-md'>
         <h1 className='text-2xl font-bold'>Login</h1>

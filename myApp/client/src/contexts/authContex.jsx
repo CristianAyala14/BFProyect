@@ -8,64 +8,70 @@ export const authContext = createContext();
 
 export const AuthProvider = ({children})=>{
 
-    const [user, setUser] = useState(null)
+    const [user, setUser] = useState({})
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [registerErrors, setRegisterErrors] = useState([])
+    const [registerErrors, setRegisterErrors] = useState()
     const [loading, setLoading] = useState(true)
 
 
     const singUp = async (user) =>{
         try {
             const res = await registerRequest(user);
-            setUser(res.payload)
-            setIsAuthenticated(true);
-        } catch (error) {
-            if(Array.isArray(error.response.data)){
-                return setRegisterErrors(error.response.data)
+            //aqui en res llega lo que ya steamos en la funcion de llamada a la api (registerRequest) por ende llega la data sea de middleware o de servidor.
+            if(res.status===200){
+                setUser(res.user)
+                setIsAuthenticated(true);
+                setRegisterErrors("");
+            }else{
+                setRegisterErrors(res.data)
+                setUser({})
+                setIsAuthenticated(false);
             }
-            setRegisterErrors([error.response.data.message])
-
+        } catch (error) {
+            console.error("Network or other error:", error);
         }
     }
 
     const singIn = async (user) =>{
         try {
             const res = await loginRequest(user);
-            setUser(res.payload)
-            setIsAuthenticated(true);
-        } catch (error) {
-            if(Array.isArray(error.response.data)){
-                return setRegisterErrors(error.response.data)
+            if(res.status===200){
+                setUser(res.user)
+                setIsAuthenticated(true);
+                setRegisterErrors("");
+                
+            }else{
+                setRegisterErrors(res.data)
+                setUser({})
+                setIsAuthenticated(false);
             }
-            setRegisterErrors([error.response.data.message])
-            
+
+        } catch (error) {
+            console.error("Network or other error:", error);  
         }
     }
+    
     
     const logOut = async (user) =>{
         try {
             Cookies.remove("authCookie");
             setIsAuthenticated(false);
-            setUser(null);
+            setUser({});
         } catch (error) {
             console.log(error)
         }
     }
 
-
-
     useEffect(()=>{
-        if(registerErrors.length>0){
+        if(registerErrors){
             const timer = setTimeout(()=>{
-                setRegisterErrors([])
+                setRegisterErrors("")
             },3000)
             return ()=> clearTimeout(timer)
         }
       },[registerErrors])
 
-
-
-      useEffect(()=>{
+    useEffect(()=>{
         async function verifyToken(){
             const cookies = Cookies.get()
             if(!cookies.authCookie){
@@ -75,30 +81,26 @@ export const AuthProvider = ({children})=>{
             }
             try {
                 const res = await verifyTokenRequest() 
-                if(!res.user){
+                if(!res.data.user){
                     setIsAuthenticated(false);
                     setLoading(false);
                     return;
                 }
                 setIsAuthenticated(true);
-                setUser(res.user);
+                setUser(res.data.user);
                 setLoading(false);
 
             } catch (error) {
                 setIsAuthenticated(false);
-                setUser(null);
+                setUser({});
                 setLoading(false);
 
             }
         }
         verifyToken(); 
-      },[])
+    },[])
 
       
-
-   
-
-
     return (
         <authContext.Provider value={{singUp, singIn, user, isAuthenticated, loading, logOut, registerErrors}}>
             {children}

@@ -9,29 +9,30 @@ class authUserController{
       const {username, email, password} = req.body
       
       const founded = await authUserDao.getBy(email)
-
       if(founded){
         return res.status(400).json({message: "The email is already registered."})
       }
       try {
         const passwordHash = await bcrypt.hash(password, 10) 
-        const newUser  = {
+        const userToCreate  = {
           username: username,
           email: email,
           password: passwordHash
         }
-        let userCreated = await authUserDao.create(newUser)
-        const response = {
+        let userCreated = await authUserDao.create(userToCreate)
+        const userRegistered = {
           id: userCreated._id,
           username: userCreated.username,
           email: userCreated.email,
         }
 
-        const auth_token = generateToken(newUser)
+        const auth_token = generateToken(userRegistered)
+
         res.cookie("authCookie", auth_token)
-        res.status(200).json({
+
+        return res.status(200).json({
           message: "User registered successfully.",
-          payload: response
+          payload: userRegistered
         })
       
       
@@ -54,16 +55,18 @@ class authUserController{
           return res.status(400).json({message: "Invalid credentials."})
         }
         //user for token
-        const user  = {
+        const userLogged  = {
           id: foundedUser._id,
           username: foundedUser.username,
           email: foundedUser.email,
         }
-        const auth_token = generateToken(user)
+
+        const auth_token = generateToken(userLogged)
+        
         res.cookie("authCookie", auth_token)
-        res.status(200).json({
+        return res.status(200).json({
           message: "User logged successfully.",
-          payload: user
+          payload: userLogged
         })
         
       }catch (error) {
@@ -103,7 +106,7 @@ class authUserController{
           username: userFounded.username,
           email: userFounded.email,
         }
-          return res.status(200).json({message: "User authorized.", user: sendUser})
+        return res.status(200).json({message: "User authorized.", payload: sendUser})
       } catch (error) {
         return res.status(500).json({message: error.message})
       }
