@@ -7,7 +7,6 @@ class authUserController{
 
     static register = async(req,res)=>{
       const {username, email, password} = req.body
-      
       const founded = await authUserDao.getBy(email)
       if(founded){
         return res.status(400).json({message: "The email is already registered."})

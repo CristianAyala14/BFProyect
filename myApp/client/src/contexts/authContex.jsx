@@ -4,30 +4,29 @@ import Cookies from "js-cookie";
 
 export const authContext = createContext();
 
-
-
 export const AuthProvider = ({children})=>{
 
     const [user, setUser] = useState({})
     const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const [registerErrors, setRegisterErrors] = useState()
+    const [registerErrors, setRegisterErrors] = useState("")
     const [loading, setLoading] = useState(true)
 
 
     const singUp = async (user) =>{
         try {
             const res = await registerRequest(user);
-            //aqui en res llega lo que ya steamos en la funcion de llamada a la api (registerRequest) por ende llega la data sea de middleware o de servidor.
             if(res.status===200){
                 setUser(res.user)
                 setIsAuthenticated(true);
                 setRegisterErrors("");
-            }else{
+            }
+            if(res.status===400){
                 setRegisterErrors(res.data)
                 setUser({})
                 setIsAuthenticated(false);
             }
         } catch (error) {
+            setRegisterErrors("Network or other error.")
             console.error("Network or other error:", error);
         }
     }
@@ -40,14 +39,16 @@ export const AuthProvider = ({children})=>{
                 setIsAuthenticated(true);
                 setRegisterErrors("");
                 
-            }else{
+            }
+            if(res.status===400){
                 setRegisterErrors(res.data)
                 setUser({})
                 setIsAuthenticated(false);
             }
 
         } catch (error) {
-            console.error("Network or other error:", error);  
+            setRegisterErrors("Network or other error.")
+            console.error("Network or other error:", error); 
         }
     }
     
